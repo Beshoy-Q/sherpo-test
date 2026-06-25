@@ -1,6 +1,7 @@
-streamlit 
+streamlit
 langchain
-langchain-openai 
+langchain-core
+langchainhub
+langchain-openai
 langchain-deepseek
 langchain-google-genai
-langchainhub

@@ -66,12 +66,10 @@ with st.sidebar:
     selected_model = st.selectbox(
         "Select LLM Model",
         options=[
-            "gpt-4o", 
+            "deepseek-chat",
             "gpt-4o-mini", 
-            "claude-3-5-sonnet-20240620", 
-            "claude-3-haiku-20240307",
-            "gemini-1.5-pro",
-            "gemini-1.5-flash"
+            "gemini-3.1-flash",
+            "gpt-4.1-mini"
         ],
         index=0
     )

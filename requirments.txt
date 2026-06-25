@@ -1,0 +1,6 @@
+streamlit 
+langchain
+langchain-openai 
+langchain-deepseek
+langchain-google-genai
+langchainhub

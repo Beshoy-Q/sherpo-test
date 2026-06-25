@@ -1,11 +1,11 @@
 import streamlit as st
-import langchainhub as hub
+from langsmith import Client
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 
 # --- Configuration ---
-LANGSMITH_REPO = "your-handle/mr-omar-assistant" # Update this!
-
+LANGSMITH_REPO = "sherpo-test" # Update this!
+ls_client = Client()
 st.set_page_config(page_title="Agent Interface & Prompt Hub", layout="wide")
 
 # --- Initialize Session State ---
@@ -19,26 +19,36 @@ def clear_history():
     st.session_state.chat_history = []
 
 def pull_from_langsmith():
+    """Pulls the prompt from LangSmith using the official SDK."""
     try:
-        prompt_obj = hub.pull(LANGSMITH_REPO)
+        # Using the LangSmith client instead of the old hub
+        prompt_obj = ls_client.pull_prompt(LANGSMITH_REPO)
+        
+        # Extract the system prompt text
         for msg in prompt_obj.messages:
             if isinstance(msg, SystemMessagePromptTemplate):
                 st.session_state.system_prompt_text = msg.prompt.template
                 break
+                
+        st.session_state.hub_loaded = True
         st.success("Prompt loaded successfully from LangSmith!")
     except Exception as e:
         st.error(f"Failed to pull from LangSmith. Error: {e}")
 
 def commit_to_langsmith(new_system_prompt):
+    """Rebuilds the ChatPromptTemplate and pushes it using the official SDK."""
     try:
         new_prompt = ChatPromptTemplate.from_messages([
             ("system", new_system_prompt),
             MessagesPlaceholder(variable_name="chat_history"),
             ("human", "{input}")
         ])
-        hub.push(LANGSMITH_REPO, new_prompt)
+        
+        # Using the LangSmith client to push
+        ls_client.push_prompt(LANGSMITH_REPO, object=new_prompt)
+        
         st.session_state.system_prompt_text = new_system_prompt
-        st.success(f"Successfully committed to {LANGSMITH_REPO}")
+        st.success(f"Successfully committed to LangSmith Prompts Hub: {LANGSMITH_REPO}")
     except Exception as e:
         st.error(f"Failed to push to LangSmith: {e}")
 

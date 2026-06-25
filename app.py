@@ -1,5 +1,5 @@
 import streamlit as st
-from langchain import hub
+import langchainhub as hub
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 
